@@ -1,0 +1,1 @@
+docker build -t harbor.viet-tin.com/mai/db-backup .

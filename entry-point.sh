@@ -26,7 +26,6 @@ if [ -z "$BACK_UP_DATABASE" ]; then
 fi
 
 
-
 while [ true ]; do
     echo "$( date +"%Y:%m.:%d-%T" ) Backup system"
     dump $BACK_UP_LOCATION $BACK_UP_HOST $BACK_UP_PORT \

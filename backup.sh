@@ -8,7 +8,7 @@ function dump {
     BACK_UP_DATABASE=$6
 
     LOC=$BACK_UP_LOCATION/dump/$( date +"%Y.%m.%d-%T" )
-    echo "[$LOC]"
+    echo "$( date +"%Y:%m.:%d-%T" ) [$LOC]"
     mkdir -p $LOC
     PGPASSWORD=$BACK_UP_PASSWORD \
         pg_dump -h $BACK_UP_HOST \

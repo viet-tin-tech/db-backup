@@ -6,4 +6,4 @@ COPY . .
 
 ENV TZ=Asia/Ho_Chi_Minh
 
-ENTRYPOINT ["bash", "-c", "./entry-point.sh" ] 
+CMD  ["bash", "-c", "./entry-point.sh" ] 
