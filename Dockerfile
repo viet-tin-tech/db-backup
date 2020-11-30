@@ -5,5 +5,6 @@ WORKDIR /backup
 COPY . .
 
 ENV TZ=Asia/Ho_Chi_Minh
+RUN mkdir /data
 
-CMD  ["bash", "-c", "./entry-point.sh" ] 
+CMD  ["/backup/entry-point.sh" ]

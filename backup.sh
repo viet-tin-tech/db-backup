@@ -7,14 +7,12 @@ function dump {
     BACK_UP_PASSWORD=$5
     BACK_UP_DATABASE=$6
 
-    LOC=$BACK_UP_LOCATION/dump/$( date +"%Y.%m.%d-%T" )
-    echo "$( date +"%Y:%m.:%d-%T" ) [$LOC]"
+    NAME=$( date +"%Y.%m.%d-%T" )
+    LOC=$BACK_UP_LOCATION/dump/$( date +"%Y.%m.%d" )
+    echo "$( date +"%Y.%m.%d-%T" ) [$LOC]"
     mkdir -p $LOC
     PGPASSWORD=$BACK_UP_PASSWORD \
         pg_dump -h $BACK_UP_HOST \
                 -U $BACK_UP_USER \
-                -d $BACK_UP_DATABASE | gzip  > $LOC/dump.gz
+                -d $BACK_UP_DATABASE | gzip  > $LOC/$NAME.gz
 }
-
-
-

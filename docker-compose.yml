@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  backup:
+    image: harbor.viet-tin.com/mai/db-backup:latest
+    environment:
+      - BACK_UP_HOST=192.168.4.79
+      - BACK_UP_PORT=5432
+      - BACK_UP_USER=admin
+      - BACK_UP_PASSWORD=244466666
+      - BACK_UP_DATABASE=prod_db
+    volumes:
+      - ./db-backup:/data
+    # entrypoint:
+    #   - bash
+    #   - -c
+    #   - "sleep 1h"

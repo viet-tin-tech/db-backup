@@ -1,7 +1,7 @@
 source ./backup.sh
 
 if [ -z "$BACK_UP_LOCATION" ]; then 
-    BACK_UP_LOCATION="."
+    BACK_UP_LOCATION="/data"
 fi
 
 if [ -z "$BACK_UP_HOST" ]; then
@@ -11,7 +11,6 @@ fi
 if [ -z "$BACK_UP_PORT" ]; then
     BACK_UP_PORT="5432"
 fi
-
 
 if [ -z "$BACK_UP_USER" ]; then
     BACK_UP_USER="admin"
@@ -25,9 +24,11 @@ if [ -z "$BACK_UP_DATABASE" ]; then
     BACK_UP_DATABASE="prod_db"
 fi
 
+echo "Host:$BACK_UP_HOST port:$BACK_UP_PORT"
+echo "user:$BACK_UP_USER pass:$BACK_UP_PASSWORD"
 
 while [ true ]; do
-    echo "$( date +"%Y:%m.:%d-%T" ) Backup system"
+    echo "$( date +"%Y.%m.%d-%T" ) Backup system"
     dump $BACK_UP_LOCATION $BACK_UP_HOST $BACK_UP_PORT \
           $BACK_UP_USER $BACK_UP_PASSWORD $BACK_UP_DATABASE
     echo "$( date +"%Y.%m.%d-%T" ) Backup system done"
