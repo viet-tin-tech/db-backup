@@ -1,37 +1,66 @@
-source ./backup.sh
+#!/usr/bin/env bash
 
-if [ -z "$BACK_UP_LOCATION" ]; then 
-    BACK_UP_LOCATION="/data"
-fi
+# dump . 192.168.4.79 5432 admin 244466666 prod_db
+function dump() {
+    local BACK_UP_LOCATION=$1
+    local BACK_UP_HOST=$2
+    local BACK_UP_PORT=$3
+    local BACK_UP_USER=$4
+    local BACK_UP_PASSWORD=$5
+    local BACK_UP_DATABASE=$6
 
-if [ -z "$BACK_UP_HOST" ]; then
-    BACK_UP_HOST="192.168.4.79"
-fi
+    NAME="$( date +"%Y.%m.%d-%T" )"
+    LOC=$BACK_UP_LOCATION/dump/$( date +"%Y.%m.%d" )
+    NAME="$BACK_UP_DATABASE-$NAME"
+    echo "$( date +"%Y.%m.%d-%T" ) [$LOC]/$NAME"
+    mkdir -p $LOC
+    PGPASSWORD=$BACK_UP_PASSWORD \
+        pg_dump -h $BACK_UP_HOST \
+                -U $BACK_UP_USER \
+                -d $BACK_UP_DATABASE | gzip  > $LOC/$NAME.gz
+}
 
-if [ -z "$BACK_UP_PORT" ]; then
-    BACK_UP_PORT="5432"
-fi
 
-if [ -z "$BACK_UP_USER" ]; then
-    BACK_UP_USER="admin"
-fi
+# dump . 192.168.4.79 5432 admin 244466666 prod_db
+function dump_all() {
+    local BACK_UP_LOCATION=$1
+    local BACK_UP_HOST=$2
+    local BACK_UP_PORT=$3
+    local BACK_UP_USER=$4
+    local BACK_UP_PASSWORD=$5
 
-if [ -z "$BACK_UP_PASSWORD" ]; then
-    BACK_UP_PASSWORD="244466666"
-fi
+    local NAME="$( date +"%Y.%m.%d-%T" )"
+    local LOC=$BACK_UP_LOCATION/dump/$( date +"%Y.%m.%d" )
 
-if [ -z "$BACK_UP_DATABASE" ]; then
-    BACK_UP_DATABASE="prod_db"
-fi
+    echo "$( date +"%Y.%m.%d-%T" ) [$LOC]/$NAME"
+    mkdir -p $LOC
+    PGPASSWORD=$BACK_UP_PASSWORD \
+        pg_dumpall -h $BACK_UP_HOST -U $BACK_UP_USER | gzip  > $LOC/$NAME.gz
+}
 
-echo "Host:$BACK_UP_HOST port:$BACK_UP_PORT"
-echo "user:$BACK_UP_USER pass:$BACK_UP_PASSWORD"
 
+BACK_UP_LOCATION=${BACK_UP_LOCATION:-.}
+BACK_UP_HOST=${BACK_UP_HOST:-192.168.4.79}
+BACK_UP_PORT=${BACK_UP_PORT:-5432}
+BACK_UP_USER=${BACK_UP_USER:-admin}
+BACK_UP_PASSWORD=${BACK_UP_PASSWORD:-244466666}
+BACK_UP_DATABASE=${BACK_UP_DATABASE:-prod_db}
+BACK_UP_DATABASE_LIST=${BACK_UP_DATABASE_LIST:-banners,chart,prod_db,stock_data}
+
+
+echo "URL:  postgres://$BACK_UP_USER:$BACK_UP_PASSWORD@$BACK_UP_HOST:$BACK_UP_PORT/$BACK_UP_DATABASE_LIST"
 while [ true ]; do
-    echo "$( date +"%Y.%m.%d-%T" ) Backup system"
-    dump $BACK_UP_LOCATION $BACK_UP_HOST $BACK_UP_PORT \
-          $BACK_UP_USER $BACK_UP_PASSWORD $BACK_UP_DATABASE
-    echo "$( date +"%Y.%m.%d-%T" ) Backup system done"
+    IFS=',' read -r -a array <<< $BACK_UP_DATABASE_LIST
+    for it_database in "${array[@]}"
+    do
+        echo "$( date +"%Y.%m.%d-%T" ) Backup database $it_database"
+        dump $BACK_UP_LOCATION $BACK_UP_HOST $BACK_UP_PORT \
+            $BACK_UP_USER $BACK_UP_PASSWORD $it_database
+        echo "$( date +"%Y.%m.%d-%T" ) Backup database $it_database done"
+    done
+
+
+    echo "$( date +"%Y.%m.%d-%T" ) Backup database done. Wait for next time"
     while [ true ]; do 
         if [ "$( date +"%H" )" ==  "2" ]; then
             break
@@ -45,7 +74,6 @@ while [ true ]; do
 
     sleep 23h
 done
-
 
 
 # Dump

@@ -1,10 +1,13 @@
-FROM bitnami/postgresql:12-debian-10
+FROM postgresql:13
 
-USER root
 WORKDIR /backup 
 COPY . .
 
 ENV TZ=Asia/Ho_Chi_Minh
 RUN mkdir /data
+
+USER root
+
+
 
 CMD  ["/backup/entry-point.sh" ]
