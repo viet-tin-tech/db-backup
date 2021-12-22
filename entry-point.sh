@@ -39,13 +39,12 @@ function dump_all() {
 }
 
 
-BACK_UP_LOCATION=${BACK_UP_LOCATION:-.}
 BACK_UP_HOST=${BACK_UP_HOST:-192.168.4.79}
 BACK_UP_PORT=${BACK_UP_PORT:-5432}
 BACK_UP_USER=${BACK_UP_USER:-admin}
 BACK_UP_PASSWORD=${BACK_UP_PASSWORD:-244466666}
-BACK_UP_DATABASE=${BACK_UP_DATABASE:-prod_db}
-BACK_UP_DATABASE_LIST=${BACK_UP_DATABASE_LIST:-banners,chart,prod_db,stock_data}
+BACK_UP_LOCATION=${BACK_UP_LOCATION:-.}
+BACK_UP_DATABASE_LIST=${BACK_UP_DATABASE_LIST:-banners,chart,prod_db}
 
 
 echo "URL:  postgres://$BACK_UP_USER:$BACK_UP_PASSWORD@$BACK_UP_HOST:$BACK_UP_PORT/$BACK_UP_DATABASE_LIST"
@@ -65,7 +64,6 @@ while [ true ]; do
         if [ "$( date +"%H" )" ==  "2" ]; then
             break
         fi
-        
         if [ "$( date +"%H" )" ==  "02" ]; then
             break
         fi
