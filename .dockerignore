@@ -1,0 +1,5 @@
+db-dump
+build-docker.sh
+docker-compose.yml
+build-docker.sh
+Dockerfile
